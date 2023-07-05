@@ -1,0 +1,9 @@
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceDefaults
+metadata:
+  name: unicorn-frontend
+  namespace: unicorn
+spec:
+  protocol: http              # tcp, http, http2, or grpc
+  meshGateway:
+    mode: local               # local, remote, or none
