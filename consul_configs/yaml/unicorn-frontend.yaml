@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: unicorn-frontend
+  namespace: unicorn
+  labels:
+    app: unicorn-frontend
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: unicorn-frontend
+  template:
+    metadata:
+      labels:
+        app: unicorn-frontend
+      annotations:
+        consul.hashicorp.com/connect-inject: 'true'
+        consul.hashicorp.com/transparent-proxy: 'true'
+        consul.hashicorp.com/connect-service-upstreams: "unicorn-backend.unicorn:11000:dc3,unicorn-backend.unicorn.cernunnos:12000,unicorn-backend.svc.unicorn.ns.dc4-default.peer:13000,unicorn-backend.svc.unicorn.ns.dc4-taranis.peer:14000"
+        consul.hashicorp.com/transparent-proxy-exclude-inbound-ports: "10000"
+    spec:
+      serviceAccountName: unicorn-frontend
+      containers:
+        - name: unicorn-frontend
+          image: k3d-doctorconsul.localhost:12345/nicholasjackson/fake-service:v0.25.0
+          ports:
+            - containerPort: 10000
+          env:
+            - name: 'LISTEN_ADDR'
+              value: '0.0.0.0:10000'
+            - name: 'UPSTREAM_URIS'
+              value: 'http://127.0.0.1:11000,http://127.0.0.1:12000,http://127.0.0.1:13000,http://127.0.0.1:14000,http://unicorn-tp-backend.virtual.unicorn.ns.dc3.dc.consul,http://unicorn-tp-backend.virtual.unicorn.ns.cernunnos.ap.dc3.dc.consul,http://unicorn-tp-backend.virtual.unicorn.dc4-default.consul,http://unicorn-tp-backend.virtual.unicorn.dc4-taranis.consul'
