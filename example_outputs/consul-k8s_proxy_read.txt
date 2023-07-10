@@ -1,0 +1,53 @@
+$ consul-k8s proxy read unicorn-ssg-frontend-cb8744f6c-r4mhv -n unicorn
+Envoy configuration for unicorn-ssg-frontend-cb8744f6c-r4mhv in namespace unicorn:
+
+==> Clusters (13)
+Name                                    FQDN                                                                                                    Endpoints               Type            Last Updated
+consul-dataplane                        consul-dataplane                                                                                        127.0.0.1:46113         STATIC          2023-07-05T17:50:17.199Z
+prometheus_backend                      prometheus_backend                                                                                      127.0.0.1:20100         STATIC          2023-07-05T17:50:17.211Z
+failover-target~0~unicorn-tp-backend    failover-target~0~unicorn-tp-backend.unicorn.dc3.internal.241c9ce2-c5bc-6ffc-a5ca-43efc47f1830.consul                           EDS             2023-07-05T17:50:17.664Z
+failover-target~1~unicorn-tp-backend    failover-target~1~unicorn-tp-backend.unicorn.dc3.internal.241c9ce2-c5bc-6ffc-a5ca-43efc47f1830.consul   192.168.234.75:8443     EDS             2023-07-05T17:50:17.540Z
+failover-target~2~unicorn-tp-backend    failover-target~2~unicorn-tp-backend.unicorn.dc3.internal.241c9ce2-c5bc-6ffc-a5ca-43efc47f1830.consul   192.168.234.75:8443     EDS             2023-07-05T18:33:03.543Z
+local_app                               local_app                                                                                               127.0.0.1:10000         STATIC          2023-07-05T17:50:17.706Z
+original-destination                    original-destination                                                                                                            ORIGINAL_DST    2023-07-05T17:50:17.511Z
+unicorn-backend                         unicorn-backend.unicorn.dc4-default.external.3e911417-2000-9505-080f-43982ca38d7c.consul                192.168.234.75:8443     EDS             2023-07-05T17:50:17.633Z
+unicorn-backend                         unicorn-backend.unicorn.dc4-taranis.external.3e911417-2000-9505-080f-43982ca38d7c.consul                192.168.234.75:8443     EDS             2023-07-05T17:50:17.568Z
+unicorn-tp-backend                      unicorn-tp-backend.unicorn.cernunnos.dc3.internal-v1.241c9ce2-c5bc-6ffc-a5ca-43efc47f1830.consul        192.168.234.75:8443     EDS             2023-07-05T17:56:12.801Z
+unicorn-tp-backend                      unicorn-tp-backend.unicorn.dc3.internal.241c9ce2-c5bc-6ffc-a5ca-43efc47f1830.consul                                                             2023-07-05T18:33:03.562Z
+unicorn-tp-backend                      unicorn-tp-backend.unicorn.dc4-default.external.3e911417-2000-9505-080f-43982ca38d7c.consul             192.168.234.75:8443     EDS             2023-07-05T18:33:03.514Z
+unicorn-tp-backend                      unicorn-tp-backend.unicorn.dc4-taranis.external.3e911417-2000-9505-080f-43982ca38d7c.consul             192.168.234.75:8443     EDS             2023-07-05T17:50:17.602Z
+
+
+==> Endpoints (10)
+Address:Port            Cluster                                 Weight  Status
+127.0.0.1:20100         prometheus_backend                      1.00    HEALTHY
+127.0.0.1:46113         consul-dataplane                        1.00    HEALTHY
+192.168.234.75:8443     unicorn-tp-backend                      1.00    HEALTHY
+192.168.234.75:8443     failover-target~1~unicorn-tp-backend    1.00    UNHEALTHY
+192.168.234.75:8443     unicorn-backend                         1.00    HEALTHY
+192.168.234.75:8443     unicorn-tp-backend                      1.00    UNHEALTHY
+127.0.0.1:10000         local_app                               1.00    HEALTHY
+192.168.234.75:8443     unicorn-backend                         1.00    HEALTHY
+192.168.234.75:8443     failover-target~2~unicorn-tp-backend    1.00    HEALTHY
+192.168.234.75:8443     unicorn-tp-backend                      1.00    HEALTHY
+
+==> Listeners (3)
+Name                                    Address:Port            Direction       Filter Chain Match              Filters                                                                                                 Last Updated
+
+public_listener                         192.168.234.91:20000    INBOUND         Any                             HTTP: * -> local_app/                                                                                   2023-07-05T17:50:17.747Z
+outbound_listener                       127.0.0.1:15001         OUTBOUND        10.43.160.212/32, 240.0.0.4/32  HTTP:                                                                                                   2023-07-05T18:33:03.567Z
+                                                                                240.0.0.6/32                    HTTP: * -> unicorn-backend.unicorn.dc4-default.external.3e911417-2000-9505-080f-43982ca38d7c.consul/
+                                                                                240.0.0.8/32                    HTTP: * -> unicorn-backend.unicorn.dc4-taranis.external.3e911417-2000-9505-080f-43982ca38d7c.consul/
+                                                                                240.0.0.9/32                    HTTP: * -> unicorn-tp-backend.unicorn.dc4-taranis.external.3e911417-2000-9505-080f-43982ca38d7c.consul/
+envoy_prometheus_metrics_listener       0.0.0.0:20200           UNSPECIFIED     Any                             HTTP: * -> prometheus_backend/                                                                          2023-07-05T17:50:17.218Z
+
+==> Routes (5)
+Name                                                    Destination Cluster                                                                             Last Updated
+default/unicorn/unicorn-backend?peer=dc4-default        unicorn-backend.unicorn.dc4-default.external.3e911417-2000-9505-080f-43982ca38d7c.consul/       2023-07-05T17:50:17.752Z
+self_admin_route                                        prometheus_backend, /                                                                           2023-07-05T17:50:17.218Z
+default/unicorn/unicorn-backend?peer=dc4-taranis        unicorn-backend.unicorn.dc4-taranis.external.3e911417-2000-9505-080f-43982ca38d7c.consul/       2023-07-05T17:50:17.758Z
+public_listener                                         local_app/                                                                                      2023-07-05T17:50:17.746Z
+default/unicorn/unicorn-tp-backend?peer=dc4-taranis     unicorn-tp-backend.unicorn.dc4-taranis.external.3e911417-2000-9505-080f-43982ca38d7c.consul/    2023-07-05T17:50:17.761Z
+
+==> Secrets (0)
+Name    Type    Last Updated

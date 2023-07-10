@@ -15,10 +15,70 @@ plugin:
     - -c
     - |
       kubectl debug -it --context $CONTEXT -n $NAMESPACE $POD --target $NAME --image nicolaka/netshoot
+  scaleNukeInPods:
+    shortCut: Shift-0
+    confirm: false
+    description: Scale a Deployment to 0
+    scopes:
+    - pods
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      kubectl scale --replicas=0 deployment "$(echo ${NAME} | sed 's/-[a-zA-Z0-9]*-[^-]*$//')" -n ${NAMESPACE} --context ${CONTEXT}
+  scale0:
+    shortCut: Shift-0
+    confirm: false
+    description: Scale a Deployment to 0
+    scopes:
+    - deployments
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      kubectl scale --replicas=0 deployment ${NAME} -n ${NAMESPACE} --context ${CONTEXT}
+  scale1:
+    shortCut: Shift-1
+    confirm: false
+    description: Scale a Deployment to 1
+    scopes:
+    - deployments
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      kubectl scale --replicas=1 deployment ${NAME} -n ${NAMESPACE} --context ${CONTEXT}
+  scale2:
+    shortCut: Shift-2
+    confirm: false
+    description: Scale a Deployment to 2
+    scopes:
+    - deployments
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      kubectl scale --replicas=2 deployment ${NAME} -n ${NAMESPACE} --context ${CONTEXT}
+  scale3:
+    shortCut: Shift-3
+    confirm: false
+    description: Scale a Deployment to 3
+    scopes:
+    - deployments
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      kubectl scale --replicas=3 deployment ${NAME} -n ${NAMESPACE} --context ${CONTEXT}
   envoyStatsToVSC:
     shortCut: Shift-1
     confirm: false
-    description: Envoy stats > VSC
+    description: Envoy stats
     scopes:
     - pods
     command: bash
@@ -30,7 +90,7 @@ plugin:
   envoyClustersToVSC:
     shortCut: Shift-2
     confirm: false
-    description: Envoy clusters > VSC
+    description: Envoy clusters
     scopes:
     - pods
     command: bash
@@ -42,7 +102,7 @@ plugin:
   envoyConfigDumpToVSC:
     shortCut: Shift-3
     confirm: false
-    description: Envoy config_dump > VSC
+    description: Envoy config_dump
     scopes:
     - pods
     command: bash
@@ -51,3 +111,51 @@ plugin:
     - -c
     - |
       kubectl exec --context ${CONTEXT} -n ${NAMESPACE} ${NAME} -- /usr/bin/curl -s localhost:19000/config_dump | vsc json
+  consul-k8s:
+    shortCut: Shift-4
+    confirm: false
+    description: consul-k8s
+    scopes:
+    - pods
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      consul-k8s proxy read ${NAME} -n ${NAMESPACE} --context ${CONTEXT} | vsc
+  consul-k8sClusters:
+    shortCut: Shift-5
+    confirm: false
+    description: consul-k8s Clusters
+    scopes:
+    - pods
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      consul-k8s proxy read ${NAME} -n ${NAMESPACE} --context ${CONTEXT} -clusters; read
+  consul-k8sClusters:
+    shortCut: Shift-6
+    confirm: false
+    description: consul-k8s Listeners
+    scopes:
+    - pods
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      consul-k8s proxy read ${NAME} -n ${NAMESPACE} --context ${CONTEXT} -listeners; read
+  consul-k8sClusters:
+    shortCut: Shift-7
+    confirm: false
+    description: consul-k8s Routes
+    scopes:
+    - pods
+    command: bash
+    background: false
+    args:
+    - -c
+    - |
+      consul-k8s proxy read ${NAME} -n ${NAMESPACE} --context ${CONTEXT} -routes; read
